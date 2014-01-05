@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/Morphatic.html">\Morphatic</a></li>
+                                                    </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">7</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1912807015"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1912807015" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1943632573"></a>
+                                <a href="../namespaces/Morphatic.html" style="margin-left: 30px; padding-left: 0">Morphatic</a>
+            </div>
+            <div id="namespace-1943632573" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-500754679"></a>
+                                <a href="../namespaces/Morphatic.Qualtrics.html" style="margin-left: 30px; padding-left: 0">Qualtrics</a>
+            </div>
+            <div id="namespace-500754679" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-213215363"></a>
+                                <a href="../namespaces/Morphatic.Qualtrics.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
+            </div>
+            <div id="namespace-213215363" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Exceptions.CurlException.html">CurlException</a></li>
+                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Exceptions.CurlNotInstalledException.html">CurlNotInstalledException</a></li>
+                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Exceptions.MissingParameterException.html">MissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Exceptions.QualtricsException.html">QualtricsException</a></li>
+                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Exceptions.QualtricsXMLException.html">QualtricsXMLException</a></li>
+                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Exceptions.UnknownFormatException.html">UnknownFormatException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1520744629"></a>
+                                <a href="../namespaces/Morphatic.Qualtrics.Facades.html" style="margin-left: 30px; padding-left: 0">Facades</a>
+            </div>
+            <div id="namespace-1520744629" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Facades.Qualtrics.html">Qualtrics</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.Qualtrics.html">Qualtrics</a></li>
+                                                    <li class="class"><a href="../classes/Morphatic.Qualtrics.QualtricsServiceProvider.html">QualtricsServiceProvider</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/Morphatic.Qualtrics.html">\Morphatic\Qualtrics</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\Morphatic\Qualtrics</small>Qualtrics</h1>
+                    <p><em>Qualtrics class</em></p>
+                    <p>This class implements wrapper functions for all of the API
+methods available in the Qualtrics 2.2 API.  It is meant to
+be used from within Laravel 4.</p>
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getResponseCountsBySurvey" class="">getResponseCountsBySurvey()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getUserInfo" class="">getUserInfo()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_addRecipient" class="">addRecipient()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_createDistribution" class="">createDistribution()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_createPanel" class="">createPanel()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getPanel" class="">getPanel()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_deletePanel" class="">deletePanel()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getPanelMemberCount" class="">getPanelMemberCount()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getPanels" class="">getPanels()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getRecipient" class="">getRecipient()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_importPanel" class="">importPanel()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_removeRecipient" class="">removeRecipient()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_sendReminder" class="">sendReminder()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_sendSurveyToIndividual" class="">sendSurveyToIndividual()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_sendSurveyToPanel" class="">sendSurveyToPanel()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_updateRecipient" class="">updateRecipient()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getLegacyResponseData" class="">getLegacyResponseData()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getSurvey" class="">getSurvey()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_getSurveys" class="">getSurveys()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_xmlToArray" class="">xmlToArray()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_parse_csv" class="">parse_csv()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_parseResponse" class="">parseResponse()</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#method_request" class="">request()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#property_username" class="">$username</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#property_token" class="">$token</a><br />
+                                                                    <a href="../classes/Morphatic.Qualtrics.Qualtrics.html#property_library" class="">$library</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Morphatic.Qualtrics.Qualtrics.php.html"><div class="path-wrapper">Morphatic/Qualtrics/Qualtrics.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\Morphatic\Qualtrics\Qualtrics</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                    <p>Morgan Benton <morgan@morphatic.com></p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                todo
+                            </th>
+                            <td>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_username" name="property_username" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$username</h3>
+                <pre class="signature">$username : string</pre>
+                <p><em>Qualtrics username</em></p>
+                <p>This is the email address that serves as the Qualtrics
+username that has access to the api</p>
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_token" name="property_token" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$token</h3>
+                <pre class="signature">$token : string</pre>
+                <p><em>Qualtrics token</em></p>
+                <p>This is the Qualtrics-generated that gives a user
+access to the api</p>
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_library" name="property_library" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$library</h3>
+                <pre class="signature">$library : string</pre>
+                <p><em>Qualtrics library</em></p>
+                <p>This is a library ID associated with the
+username that has access to the api</p>
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct()</pre>
+                <p><em>Creates a new object of type Qualtrics, setting appropriate authentication parameters</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getResponseCountsBySurvey" name="method_getResponseCountsBySurvey" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getResponseCountsBySurvey()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getResponseCountsBySurvey(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Gets the total number of responses for a survey in a given date range</em></p>
+                <pre><code>$params = array(
+    'Format'    =&gt; 'JSON',               // Must be XML or JSON, defaults to JSON
+    'StartDate' =&gt; 'YYYY-MM-DD',         // Start date of responses to include
+    'EndDate'   =&gt; 'YYYY-MM-DD',         // (optional) defaults to today's date
+    'SurveyID'  =&gt; 'SV_9LC2rrUZT8c2EiF', // the Qualtrics ID of the survey in question.
+);</code></pre>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Returns a PHP object with the resulting counts of "Auditable", "Generated" and "Deleted" responses</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUserInfo" name="method_getUserInfo" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUserInfo()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUserInfo(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Gets information about a user</em></p>
+                <pre><code>$params = array(
+    'Format' =&gt; 'JSON', // Must be XML or JSON, defaults to JSON
+);</code></pre>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Information about the user in question</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_addRecipient" name="method_addRecipient" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">addRecipient()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">addRecipient(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Add a new recipient to a panel</em></p>
+                <pre><code>$params = array(
+    'Format'          =&gt; 'JSON',               // Must be XML or JSON, defaults to JSON
+    'LibraryID'       =&gt; 'GR_6G4LaoiroGxHH12', // Start date of responses to include
+    'PanelID'         =&gt; 'ML_5yIfnFP0soZK3GJ', // Start date of responses to include
+    'FirstName'       =&gt; 'Douglas',            // Recipient's first name
+    'LastName'        =&gt; 'Crockford',          // Recipient's last name
+    'Email'           =&gt; 'doug@js.org',        // Recipient's email address
+    'ExternalDataRef' =&gt; 'crockdx',            // (optional)
+    'Language'        =&gt; 'EN',                 // (optional) language, defaults to EN
+    'ED[***]'         =&gt; '@dougcrockford',     // (optional) embedded data, e.g. ED[twitterID]
+                                               // multiple values for ED possible
+);</code></pre>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Returns true on success</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_createDistribution" name="method_createDistribution" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">createDistribution()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">createDistribution(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Creates a distribution for survey and a panel.  No emails will be sent.  Distribution links can be generated later to take the survey.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>An object containing the DistributionID</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_createPanel" name="method_createPanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">createPanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">createPanel(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Creates a new Panel in the Qualtrics System and returns the ID of the new panel</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Returns the ID of the new panel</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPanel" name="method_getPanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPanel(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Gets all the panel members for the given panel</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The panel members and any requested data</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_deletePanel" name="method_deletePanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">deletePanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">deletePanel(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Deletes a panel</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The results of the deletion process</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPanelMemberCount" name="method_getPanelMemberCount" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPanelMemberCount()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPanelMemberCount(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Gets the number of panel members</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The number of members of the panel</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPanels" name="method_getPanels" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPanels()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPanels(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Gets all of the panels in a given library</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The panels in the library</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getRecipient" name="method_getRecipient" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getRecipient()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getRecipient(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Gets a representation of the recipient and their history</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The representation of the recipient</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_importPanel" name="method_importPanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">importPanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">importPanel(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Imports a csv file as a new panel</em></p>
+                <p>Imports a csv file as a new panel (optionally it can append to a previously made panel)
+into the database and returns the panel id.  The csv file can be posted (there is an
+approximate 8 megabytes limit) or a url can be given to retrieve the file from a remote server.
+The csv file must be comma separated using " for encapsulation.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Contains the new PanelID, a count of imported recipients, and a count of ignored recipients</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_removeRecipient" name="method_removeRecipient" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">removeRecipient()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">removeRecipient(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Removes a specified panel member from a specified panel</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The representation of the recipient</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_sendReminder" name="method_sendReminder" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">sendReminder()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">sendReminder(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Sends a reminder through the Qualtrics mailer to the panel or individual as specified by the parent distribution Id</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The email distribution ID and distribution queue id</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_sendSurveyToIndividual" name="method_sendSurveyToIndividual" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">sendSurveyToIndividual()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">sendSurveyToIndividual(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Sends a survey through the Qualtrics mailer to the individual specified</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The email distribution ID and distribution queue id</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_sendSurveyToPanel" name="method_sendSurveyToPanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">sendSurveyToPanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">sendSurveyToPanel(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Sends a survey through the Qualtrics mailer to the panel specified</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>The email distribution ID and distribution queue id</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_updateRecipient" name="method_updateRecipient" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">updateRecipient()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">updateRecipient(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Updates the recipient’s data—any value not specified will be left alone and not updated</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Returns true on success or WP_Error on failure</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLegacyResponseData" name="method_getLegacyResponseData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLegacyResponseData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLegacyResponseData(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Returns all of the response data for a survey in the original (legacy) data format</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>An object representing the responses for the specified panel members</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSurvey" name="method_getSurvey" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSurvey()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSurvey(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>This request returns an xml export of the survey. NOTE: Custom response format!</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>On object representing the survey.</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSurveys" name="method_getSurveys" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSurveys()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSurveys(string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>This request returns a list of all the surveys for the user</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array of named parameters needed to complete the request (see code above)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\MissingParameterException</dt>
+                            <dd><p>Thrown when one of the required parameters does not exist in the $params array</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>A list of surveys available to the user</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_xmlToArray" name="method_xmlToArray" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">xmlToArray()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">xmlToArray(\SimpleXMLElement <span class="argument">$xml</span>, object[] <span class="argument">$out</span>) : array</pre>
+                <p><em>Converts XML to Array that can then be converted to JSON</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\SimpleXMLElement</td>
+                                <td>$xml</td>
+                                <td><p>The XML to be converted</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>object[]</td>
+                                <td>$out</td>
+                                <td><p>An empty array to be populated by the function</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>The XML converted to an array</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parse_csv" name="method_parse_csv" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">parse_csv()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parse_csv(string <span class="argument">$csv_string</span>, string <span class="argument">$delimiter</span>, boolean <span class="argument">$skip_empty_lines</span>, boolean <span class="argument">$trim_fields</span>) : array</pre>
+                <p><em>Converts csv into 2-dimensional array</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$csv_string</td>
+                                <td><p>The CSV string to be parsed</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$delimiter</td>
+                                <td><p>The delimiter to be used for parsing, defaults to comma</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$skip_empty_lines</td>
+                                <td><p>Whether or not to skip empty lines, defaults to true</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$trim_fields</td>
+                                <td><p>Whether or not to trim() fields, defaults to true</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>The two-dimensional array representing the CSV</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parseResponse" name="method_parseResponse" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">parseResponse()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parseResponse(resource <span class="argument">$ch</span>, string <span class="argument">$result</span>) : array</pre>
+                <p><em>Parses the data returned from a Qualtrics request.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>resource</td>
+                                <td>$ch</td>
+                                <td><p>The curl handle associated with the request</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$result</td>
+                                <td><p>The text returned from the request</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\QualtricsXMLException</dt>
+                            <dd><p>Thrown when an XML response cannot be parsed correctly</p></dd>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\UnknownFormatException</dt>
+                            <dd><p>Thrown when Qualtrics returns a response with an unrecognized content-type header</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Returns an array with the headers and parsed response text</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_request" name="method_request" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">request()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">request(string <span class="argument">$request</span>, string[] <span class="argument">$params</span>) : object</pre>
+                <p><em>Private function that makes a generic Qualtrics API request.</em></p>
+                <p>This function takes an API function name and an array of parameters
+and makes an attempt to fetch the data using the Qualtrics API.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$request</td>
+                                <td><p>The name of the API function to be called</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$params</td>
+                                <td><p>An array which contains any necessary parameters for the API call</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\CurlNotInstalledException</dt>
+                            <dd><p>Thrown when the curl library is not installed on the server</p></dd>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\QualtricsException</dt>
+                            <dd><p>Thrown when Qualtrics returns an error with the request</p></dd>
+                                                    <dt>\Morphatic\Qualtrics\Exceptions\CurlException</dt>
+                            <dd><p>Thrown when the curl request is unsuccessful, e.g. request timeout</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Returns an object representing the requested data</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Qualtrics.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Morphatic/Qualtrics/Qualtrics.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/Morphatic.html">\Morphatic</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on January 5th, 2014 at 00:27.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

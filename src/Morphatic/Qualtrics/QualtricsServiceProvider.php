@@ -1,8 +1,18 @@
-<?php 
+<?php
+/**
+ * QualtricsServiceProvider.php
+ */
+
 namespace Morphatic\Qualtrics;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * QualtricsServiceProvider class
+ *
+ * This class registers the Qualtrics package and all of its
+ * exceptions with the Laravel 4 framework.
+ */
 class QualtricsServiceProvider extends ServiceProvider {
 
 	/**

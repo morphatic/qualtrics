@@ -1,4 +1,10 @@
 <?php
+/**
+ * config.php
+ *
+ * Users of the package can hard-code Qualtrics authentication
+ * credentials in this file.
+ */
 
 return [
 	/*

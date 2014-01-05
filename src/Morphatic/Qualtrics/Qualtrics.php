@@ -1,11 +1,19 @@
 <?php
+/**
+ * Qualtrics.php
+ *
+ * This file contains the implementation of the core functionality
+ * of this package.
+ */
+
 namespace Morphatic\Qualtrics;
 use Illuminate\Support\Facades\Config;
+
 /**
  * Qualtrics class
  *
- * This class implements access functions for all of the API 
- * functions available in the Qualtrics 2.2 API.  It is meant to
+ * This class implements wrapper functions for all of the API 
+ * methods available in the Qualtrics 2.2 API.  It is meant to
  * be used from within Laravel 4.
  * 
  * @author Morgan Benton <morgan@morphatic.com>
@@ -55,7 +63,8 @@ class Qualtrics {
 	/**
 	 * Converts XML to Array that can then be converted to JSON
 	 *
-	 * @param SimpleXMLElement $xml The XML to be converted
+	 * @param \SimpleXMLElement $xml The XML to be converted
+	 * @param object[]          $out An empty array to be populated by the function
 	 * @return array The XML converted to an array
 	 */
 	private function xmlToArray( $xml, $out = array() ) {
@@ -100,11 +109,13 @@ class Qualtrics {
 	/**
 	 * Parses the data returned from a Qualtrics request.
 	 *
-	 * @param resource $ch The curl handle associated with the request
-	 * @param string $result The text returned from the request
+	 * @param resource $ch 		The curl handle associated with the request
+	 * @param string   $result  The text returned from the request
+	 * @throws Exceptions\QualtricsXMLException  Thrown when an XML response cannot be parsed correctly
+	 * @throws Exceptions\UnknownFormatException Thrown when Qualtrics returns a response with an unrecognized content-type header
 	 * @return array Returns an array with the headers and parsed response text
 	 */
-	private function parseResponse( $ch, $result, $request ) {
+	private function parseResponse( $ch, $result ) {
 		
 		// determine where the headers end and the response begins
 		$header_length = curl_getinfo( $ch, CURLINFO_HEADER_SIZE );
@@ -165,11 +176,14 @@ class Qualtrics {
 	 * Private function that makes a generic Qualtrics API request.
 	 *
 	 * This function takes an API function name and an array of parameters
-	 * and makes an attempt to fetch th edata using the Qualtrics API.
+	 * and makes an attempt to fetch the data using the Qualtrics API.
 	 *
-	 * @param string $request The name of the API function to be called
-	 * @param mixed $params An array which contains any necessary parameters for the API call
-	 * @return object Returns either an object representing the requested data or a WP_Error object
+	 * @param string         $request The name of the API function to be called
+	 * @param string[] $params  An array which contains any necessary parameters for the API call
+	 * @throws Exceptions\CurlNotInstalledException Thrown when the curl library is not installed on the server
+	 * @throws Exceptions\QualtricsException        Thrown when Qualtrics returns an error with the request
+	 * @throws Exceptions\CurlException             Thrown when the curl request is unsuccessful, e.g. request timeout
+	 * @return object Returns an object representing the requested data
 	 */
 	private function request( $request, $params = array() ) {
 		
@@ -228,10 +242,17 @@ class Qualtrics {
 	/**
 	 * Gets the total number of responses for a survey in a given date range
 	 *
-	 * @param string Format Must be XML or JSON, defaults to JSON
-	 * @param string StartDate Start date of responses to include, format is YYYY-MM-DD
-	 * @param string EndDate End date of responses to include, format is YYYY-MM-DD, default is today's date
-	 * @param string SurveyID The Qualtrics ID of the survey in question.  The user must have permission to view this survey's responses.
+	 * ```
+	 * $params = array(
+	 *		'Format'    => 'JSON',               // Must be XML or JSON, defaults to JSON
+	 *		'StartDate' => 'YYYY-MM-DD',         // Start date of responses to include
+	 *		'EndDate'   => 'YYYY-MM-DD',         // (optional) defaults to today's date
+	 *		'SurveyID'  => 'SV_9LC2rrUZT8c2EiF', // the Qualtrics ID of the survey in question.
+	 * );
+	 * ```
+	 *
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object Returns a PHP object with the resulting counts of "Auditable", "Generated" and "Deleted" responses
 	 */
 	function getResponseCountsBySurvey( $params = array() ) {
@@ -255,7 +276,14 @@ class Qualtrics {
 	/**
 	 * Gets information about a user
 	 *
-	 * @param string Format Must be XML or JSON.  Defaults to JSON.
+	 * ```
+	 * $params = array(
+	 *		'Format' => 'JSON', // Must be XML or JSON, defaults to JSON
+	 * );
+	 * ```
+	 *
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object Information about the user in question
 	 */
 	function getUserInfo( $params = array() ) {
@@ -269,16 +297,24 @@ class Qualtrics {
 	/**
 	 * Add a new recipient to a panel
 	 *
-	 * @param string Format           Must be XML or JSON, defaults to JSON
-	 * @param string LibraryID        The LibraryID of the user who owns the panel
-	 * @param string PanelID          The ID of the Panel to which the user is to be added
-	 * @param string FirstName        First name of the new recipient
-	 * @param string LastName         Last name of the new recipient
-	 * @param string Email            Email address of the new recipient
-	 * @param string ExternalDataRef  (optional) A value to store in the external data ref for the user (should default to the WordPress username)
-	 * @param string Language         (optional) The language code for the user, e.g. EN, defaults to EN
-	 * @param string ED[***]          (optional) An embedded data value, there can be many, and takes the form e.g. ED[skypeID]=mcbenton
-	 * @return object Returns true on success or WP_Error on failure
+	 * ```
+	 * $params = array(
+	 *		'Format'          => 'JSON',               // Must be XML or JSON, defaults to JSON
+	 *		'LibraryID'       => 'GR_6G4LaoiroGxHH12', // Start date of responses to include
+	 *		'PanelID'         => 'ML_5yIfnFP0soZK3GJ', // Start date of responses to include
+	 *		'FirstName'       => 'Douglas',            // Recipient's first name
+	 *		'LastName'        => 'Crockford',          // Recipient's last name
+	 *		'Email'           => 'doug@js.org',        // Recipient's email address
+	 *		'ExternalDataRef' => 'crockdx',            // (optional) 
+	 *		'Language'        => 'EN',                 // (optional) language, defaults to EN
+	 *		'ED[***]'         => '@dougcrockford',     // (optional) embedded data, e.g. ED[twitterID]
+	 *												   // multiple values for ED possible
+	 * );
+	 * ```
+	 *
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
+	 * @return object Returns true on success
 	 */
 	function addRecipient( $params = array() ) {
 		// set the parameters for this request
@@ -311,6 +347,8 @@ class Qualtrics {
 	 * @param string PanelID The ID of the panel for the distribution
 	 * @param string Description A description of the distribution
 	 * @param string PanelLibraryID The library ID of the panel
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object An object containing the DistributionID
 	 */
 	function createDistribution( $params = array() ) {
@@ -340,6 +378,8 @@ class Qualtrics {
 	 * @param string LibraryID The library ID of the user creating the panel
 	 * @param string Name A name for the new panel
 	 * @param string Category (optional) The category the panel is created in
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object Returns the ID of the new panel
 	 */
 	function createPanel( $params = array() ) {
@@ -365,6 +405,8 @@ class Qualtrics {
 	 * @param string LibraryID The library ID of the panel
 	 * @param string PanelID The panel ID you want to export
 	 * @param string EmbeddedData A comma-separated list of the embedded data keys you want to export. Only required for CSV export. XML includes all embedded data.
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The panel members and any requested data
 	 */
 	function getPanel( $params = array() ) {
@@ -389,6 +431,8 @@ class Qualtrics {
 	 * @param string Format Must be XML, CSV, or HTML, defaults to CSV
 	 * @param string LibraryID The library ID of the panel
 	 * @param string PanelID The panel ID you want to export
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The results of the deletion process
 	 */
 	function deletePanel( $params = array() ) {
@@ -413,6 +457,8 @@ class Qualtrics {
 	 * @param string Format Must be XML or JSON, defaults to JSON
 	 * @param string LibraryID The library ID of the panel
 	 * @param string PanelID The panel ID you want to get a count for
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The number of members of the panel
 	 */
 	function getPanelMemberCount( $params = array() ) {
@@ -436,6 +482,8 @@ class Qualtrics {
 	 * 
 	 * @param string Format Must be XML or JSON, defaults to JSON
 	 * @param string LibraryID The library ID of the panel
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The panels in the library
 	 */
 	function getPanels( $params = array() ) {
@@ -456,6 +504,8 @@ class Qualtrics {
 	 * @param string Format Must be XML or JSON, defaults to JSON
 	 * @param string LibraryID The library ID of the panel
 	 * @param string RecipientID The recipient ID you want to get
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The representation of the recipient
 	 */
 	function getRecipient( $params = array() ) {
@@ -496,6 +546,8 @@ class Qualtrics {
 	 * @param string AllED          (optional) 0:1 If set to 1, will import all non-used columns as embedded data, and you won't have to set the EmbeddedData parameter
 	 * @param string EmbeddedData   (optional) Comma-separated list of column numbers to treat as embedded data
 	 * @param string Category       (optional) Sets the category for the panel
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object Contains the new PanelID, a count of imported recipients, and a count of ignored recipients
 	 */
 	function importPanel( $params = array() ) {
@@ -524,6 +576,8 @@ class Qualtrics {
 	 * @param string LibraryID The library ID of the panel
 	 * @param string PanelID The ID of the panel from which the recipient will be removed
 	 * @param string RecipientID The recipient ID you want to remove
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The representation of the recipient
 	 */
 	function removeRecipient( $params = array() ) {
@@ -555,6 +609,8 @@ class Qualtrics {
 	 * @param string Subject                    The subject for the email
 	 * @param string MessageID                  The ID of the message from the message library to be sent
 	 * @param string LibraryID                  The ID of the library that contains the message to be sent
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The email distribution ID and distribution queue id
 	 */
 	function sendReminder( $params = array() ) {
@@ -596,6 +652,8 @@ class Qualtrics {
 	 * @param string PanelID           The ID of the message from the message library to be sent
 	 * @param string PanelLibraryID    The ID of the library that contains the message to be sent
 	 * @param string RecipientID       The recipient ID of the person to whom to send the survey
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The email distribution ID and distribution queue id
 	 */
 	function sendSurveyToIndividual( $params = array() ) {
@@ -643,6 +701,8 @@ class Qualtrics {
 	 * @param string PanelLibraryID    The ID of the library that contains the message to be sent
 	 * @param string ExpirationDate    (optional) YYYY-MM-DD hh:mm:ss when the survey invitation expires
 	 * @param string LinkType          (optional) {Individual,Multiple,Anonymous} Defaults to Individual
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object The email distribution ID and distribution queue id
 	 */
 	function sendSurveyToPanel( $params = array() ) {
@@ -685,6 +745,8 @@ class Qualtrics {
 	 * @param string ExternalDataRef  (optional) A value to store in the external data ref for the user (should default to the WordPress username)
 	 * @param string Language         (optional) The language code for the user, e.g. EN, defaults to EN
 	 * @param string ED[***]          (optional) An embedded data value, there can be many, and takes the form e.g. ED[skypeID]=mcbenton
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object Returns true on success or WP_Error on failure
 	 **/
 	function updateRecipient( $params = array() ) {
@@ -725,6 +787,8 @@ class Qualtrics {
 	 * @param string UnansweredRecode   (optional) The recode value for seen but unanswered questions. If not specified a blank value is put in for these questions.
 	 * @param string PanelID            (optional) If supplied it will only get the results for the members of the panel specified
 	 * @param string ResponseInProgress (optional) If 1 (true) will retrieve the responses in progress (and only the responses in progress )
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object An object representing the responses for the specified panel members
 	 */
 	public function getLegacyResponseData( $params = array() ) {
@@ -777,6 +841,8 @@ class Qualtrics {
 	 *
 	 * @param string SurveyID     The ID of the survey to be exported
 	 * @param string ExportLogic  If 1 (true) it will export the logic. EXPERIMENTAL
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object  On object representing the survey.
 	 */
 	function getSurvey( $params = array() )	{
@@ -798,6 +864,8 @@ class Qualtrics {
 	 * This request returns a list of all the surveys for the user
 	 *
 	 * @param string Format  {XML,JSON} Default is JSON
+	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
+	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
 	 * @return object  A list of surveys available to the user
 	 */
 	function getSurveys( $params = array() ) {

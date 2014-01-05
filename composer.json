@@ -14,12 +14,21 @@
         "illuminate/support": "4.1.*@dev"
     },
 	"require-dev": {
-		"orchestra/testbench": "2.1.*@dev"
+		"orchestra/testbench": "2.1.*@dev",
+		"phpdocumentor/phpdocumentor": "2.*"
 	},
     "autoload": {
         "psr-0": {
             "Morphatic\\Qualtrics\\": "src/"
         }
     },
+	"extra": {
+		"versions": {
+			"1": "1.0/master"
+		},
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	},
     "minimum-stability": "dev"
 }
