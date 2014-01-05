@@ -10,13 +10,11 @@ class QualtricsTest extends TestCase {
 	|--------------------------------------------------------------------------
 	*/
 	protected function getPackageAliases() {
-		return [ 'Qualtrics' => 'Morphatic\Qualtrics\Facades\Qualtrics' ];
+		return array( 'Qualtrics' => 'Morphatic\Qualtrics\Facades\Qualtrics' );
 	}
 	
 	protected function getPackageproviders() {
-		return [
-			'Morphatic\Qualtrics\QualtricsServiceProvider',
-		];
+		return array( 'Morphatic\Qualtrics\QualtricsServiceProvider' );
 	}
 	
 	protected function getEnvironmentSetup( $app ) {
