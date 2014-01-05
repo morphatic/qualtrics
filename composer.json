@@ -1,0 +1,25 @@
+{
+    "name": "morphatic/qualtrics",
+    "description": "Provides access to the Qualtrics API in Laravel 4",
+	"license": "MIT",
+    "authors": [
+        {
+            "name": "Morgan Benton",
+            "email": "morgan@morphatic.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+		"ext-curl": "*",
+        "illuminate/support": "4.1.*@dev"
+    },
+	"require-dev": {
+		"orchestra/testbench": "2.1.*@dev"
+	},
+    "autoload": {
+        "psr-0": {
+            "Morphatic\\Qualtrics\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
