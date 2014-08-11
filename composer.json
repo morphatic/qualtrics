@@ -11,11 +11,11 @@
     "require": {
         "php": ">=5.3.0",
 		"ext-curl": "*",
-        "illuminate/support": "4.1.*@dev"
+        "illuminate/support": "4.3.*@dev"
     },
 	"require-dev": {
-		"orchestra/testbench": "2.1.*@dev",
-		"phpdocumentor/phpdocumentor": "2.*"
+		"orchestra/testbench": "2.3.*@dev",
+		"phpdocumentor/phpdocumentor": "dev-master"
 	},
     "autoload": {
         "psr-0": {
