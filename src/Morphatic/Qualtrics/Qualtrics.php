@@ -51,13 +51,60 @@ class Qualtrics {
 	private $library;
 	
 	/**
-	 * Creates a new object of type Qualtrics, setting appropriate authentication parameters
+	 * Qualtrics API version
+	 *
+	 * This is a Qualtrics API version used by
+	 * this package
+	 *
+	 * @var string $version
+	 */
+	private $version = '2.2';
+	
+	/**
+	 * Creates a new object of type Qualtrics, using parameters stored in the config file
 	 */
 	public function __construct() {
-		// get the necessary credentials from the config files
+		
+		// check for the necessary parameters
+		if ( empty( Config::get( 'qualtrics::username' ) ) || empty( Config::get( 'qualtrics::token' ) ) )
+			throw new MissingParameterException(
+				"The Qualtrics username and/or API token was unspecified in the config file"
+			);
+			
+		// set the necessary credentials from the config files
 		$this->username = Config::get( 'qualtrics::username' );
 		$this->token    = Config::get( 'qualtrics::token'    );
 		$this->library  = Config::get( 'qualtrcis::library'  );
+		
+		// make a request to make sure the credentials are correct
+		$this->getUserInfo();
+	}
+	
+	/**
+	 * Creates a new object of type Qualtrics, using parameters passed in by the user
+	 */
+	public function __construct( $username, $token, $library = null ) {
+		
+		if ( empty( $username ) || empty( $token ) )
+			throw new MissingParameterException(
+				"The Qualtrics username and/or API token was unspecified"
+			);
+		// get the necessary credentials from the config files
+		$this->username = $username;
+		$this->token    = $token;
+		$this->library  = $library;
+		
+		// make a request to make sure the credentials are correct
+		$this->getUserInfo();
+	}
+	
+	/**
+	 * Checks to see whether this instance has a library
+	 *
+	 * @return boolean True or false
+	 */
+	public function hasLibrary() {
+		return ! empty( $this->library );
 	}
 	
 	/**
@@ -198,7 +245,7 @@ class Qualtrics {
 				'Request' => $request,
 				'User'	  => $this->username,
 				'Token'   => $this->token,
-				'Version' => '2.2',
+				'Version' => $this->version,
 			), $params
 		);
 		
