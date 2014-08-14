@@ -8,12 +8,13 @@
 
 namespace Morphatic\Qualtrics;
 use Illuminate\Support\Facades\Config;
+use GuzzleHttp\Client;
 
 /**
  * Qualtrics class
  *
  * This class implements wrapper functions for all of the API 
- * methods available in the Qualtrics 2.2 API.  It is meant to
+ * methods available in the Qualtrics 2.3 API.  It is meant to
  * be used from within Laravel 4.
  * 
  * @author Morgan Benton <morgan@morphatic.com>
@@ -58,46 +59,66 @@ class Qualtrics {
 	 *
 	 * @var string $version
 	 */
-	private $version = '2.2';
+	private $version = '2.3';
 	
 	/**
-	 * Creates a new object of type Qualtrics, using parameters stored in the config file
+	 * Qualtrics API URL
+	 *
+	 * This is a Qualtrics API URL used by
+	 * this package
+	 *
+	 * @var string $api_url
 	 */
-	public function __construct() {
+	private $api_url = 'https://survey.qualtrics.com/WRAPI/ControlPanel/api.php';
+	
+	/**
+	 * Guzzle client (http://guzzle.readthedocs.org/)
+	 *
+	 * Used to make all of our API requests
+	 *
+	 * @var string $api_url
+	 */
+	private $client;
+	
+	/**
+	 * Creates a new object of type Qualtrics
+	 */
+	public function __construct( $username = null, $token = null, $library = null, $client = null ) {
 		
 		// check for the necessary parameters
-		if ( empty( Config::get( 'qualtrics::username' ) ) || empty( Config::get( 'qualtrics::token' ) ) )
-			throw new MissingParameterException(
-				"The Qualtrics username and/or API token was unspecified in the config file"
+		$username = is_null( $username ) ? Config::get( 'qualtrics::username' ) : $username;
+		$token    = is_null( $token    ) ? Config::get( 'qualtrics::token'    ) : $token;
+		$library  = is_null( $library  ) ? Config::get( 'qualtrics::library'  ) : $library;
+		
+		if ( empty( $username ) || empty( $token ) )
+			throw new Exceptions\MissingParameterException(
+				"The Qualtrics username and/or API token was unspecified. These parameters must be passed to the constructor or stored in the cofig file."
 			);
 			
 		// set the necessary credentials from the config files
-		$this->username = Config::get( 'qualtrics::username' );
-		$this->token    = Config::get( 'qualtrics::token'    );
-		$this->library  = Config::get( 'qualtrcis::library'  );
-		
-		// make a request to make sure the credentials are correct
-		$this->getUserInfo();
-	}
-	
-	/**
-	 * Creates a new object of type Qualtrics, using parameters passed in by the user
-	 */
-	public function __construct( $username, $token, $library = null ) {
-		
-		if ( empty( $username ) || empty( $token ) )
-			throw new MissingParameterException(
-				"The Qualtrics username and/or API token was unspecified"
-			);
-		// get the necessary credentials from the config files
 		$this->username = $username;
 		$this->token    = $token;
 		$this->library  = $library;
 		
-		// make a request to make sure the credentials are correct
-		$this->getUserInfo();
+		// set up our guzzle client
+		$this->client = new Client([
+			'base_url'        => $this->api_url,
+			'request.options' => [
+				'exceptions'      => false,
+				'timeout'         => 0,
+				'connect_timeout' => 0,
+			],
+			'defaults'        => [
+				'query' => [
+					'User'	  => $this->username,
+					'Token'   => $this->token,
+					'Version' => $this->version,
+					'Format'  => 'JSON',
+				],				
+			],
+		]);
 	}
-	
+		
 	/**
 	 * Checks to see whether this instance has a library
 	 *
@@ -108,116 +129,13 @@ class Qualtrics {
 	}
 	
 	/**
-	 * Converts XML to Array that can then be converted to JSON
+	 * Adds a mock HTTP subscriber for testing purposes
 	 *
-	 * @param \SimpleXMLElement $xml The XML to be converted
-	 * @param object[]          $out An empty array to be populated by the function
-	 * @return array The XML converted to an array
+	 * @return boolean True or false
 	 */
-	private function xmlToArray( $xml, $out = array() ) {
-		foreach ( (array) $xml as $index => $node )
-			$out[ $index ] = ( is_object( $node ) || is_array( $node ) ) ? $this->xmlToArray( $node ) : $node;
-		return $out;
+	public function attachMock( $mock ) {
+		$this->client->getEmitter()->attach( $mock );
 	}
-	
-	/**
-	 * Converts csv into 2-dimensional array
-	 *
-	 * @param string  $csv_string 		The CSV string to be parsed
-	 * @param string  $delimiter		The delimiter to be used for parsing, defaults to comma
-	 * @param boolean $skip_empty_lines	Whether or not to skip empty lines, defaults to true
-	 * @param boolean $trim_fields		Whether or not to trim() fields, defaults to true
-	 * @return array The two-dimensional array representing the CSV
-	 */
-	private function parse_csv ( $csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true) {
-	    $enc = preg_replace('/(?<!")""/', '!!Q!!', $csv_string);
-	    $enc = preg_replace_callback(
-	        '/"(.*?)"/s',
-	        function ($field) {
-	            return urlencode(utf8_encode($field[1]));
-	        },
-	        $enc
-	    );
-	    $lines = preg_split($skip_empty_lines ? ($trim_fields ? '/( *\R)+/s' : '/\R+/s') : '/\R/s', $enc);
-	    return array_map(
-	        function ($line) use ($delimiter, $trim_fields) {
-	            $fields = $trim_fields ? array_map('trim', explode($delimiter, $line)) : explode($delimiter, $line);
-	            return array_map(
-	                function ($field) {
-	                    return str_replace('!!Q!!', '"', utf8_decode(urldecode($field)));
-	                },
-	                $fields
-	            );
-	        },
-	        $lines
-	    );
-	}
-
-	/**
-	 * Parses the data returned from a Qualtrics request.
-	 *
-	 * @param resource $ch 		The curl handle associated with the request
-	 * @param string   $result  The text returned from the request
-	 * @throws Exceptions\QualtricsXMLException  Thrown when an XML response cannot be parsed correctly
-	 * @throws Exceptions\UnknownFormatException Thrown when Qualtrics returns a response with an unrecognized content-type header
-	 * @return array Returns an array with the headers and parsed response text
-	 */
-	private function parseResponse( $ch, $result ) {
-		
-		// determine where the headers end and the response begins
-		$header_length = curl_getinfo( $ch, CURLINFO_HEADER_SIZE );
-		
-		// get the raw headers
-		$raw_headers = substr( $result, 0, $header_length );
-		
-		// get the raw response
-		$response = substr( $result, $header_length );
-		
-		// parse the headers
-		$headers = array();
-		foreach ( explode( "\r\n", $raw_headers ) as $i => $line ) {
-			if ( preg_match( '/^http.*?(\d{3}).*?/i', $line, $http_code ) ) {
-				$headers[ 'http_code' ] = $http_code[ 1 ];
-			} elseif ( '' !== trim( $line ) ) {
-				list( $key, $value ) = explode( ': ', $line );
-				$headers[ strtolower( $key ) ] = $value;
-			}
-		}
-		
-		// determine the content-type and parse the response
-		switch ( $headers[ 'content-type' ] ) {
-			// XML
-			case 'text/xml':
-			case 'text/xml; charset=utf-8':
-				libxml_use_internal_errors( true );
-				$response = new \SimpleXMLElement( $response, LIBXML_NOCDATA );
-				if ( ! $response ) {
-					$errors = libxml_get_errors();
-					throw new Exceptions\QualtricsXMLException( 'Qualtrics XML Parse Error: ' . $errors[ 0 ]->message, $errors[ 0 ]->code );
-				}
-				$response = json_decode( json_encode( $this->xmlToArray( $response ) ) );
-				break;
-			// JSON
-			case 'application/json':
-				$response = json_decode( $response );
-				break;
-			// CSV (MS Excel format)
-			case 'application/vnd.msexcel':
-				$response = $this->parse_csv( $response );
-				break;
-			// HTML
-			case 'text/html; charset=UTF-8':
-				// TODO
-				break;
-			// Something other than XML, JSON, HTML, or CSV
-			default:
-				throw new Exceptions\UnknownFormatException( 'Qualtrics returned a response in an unknown format: ' . $headers[ 'content-type' ] );
-				break;
-		}
-		
-		return array( 'headers' => $headers, 'response' => $response );
-	}
-	
 	
 	/**
 	 * Private function that makes a generic Qualtrics API request.
@@ -234,58 +152,38 @@ class Qualtrics {
 	 */
 	private function request( $request, $params = array() ) {
 		
-		// throw an exception if curl is not installed
-		if ( ! function_exists( 'curl_init' ) ) throw new Exceptions\CurlNotInstalledException( 'Curl does not appear to be installed on your server.' );
-
-		// create a new curl handle
-		$ch = curl_init( 'https://survey.qualtrics.com/WRAPI/ControlPanel/api.php' );
-		
-		// set the parameters for the request
-		$params = array_merge( array(
-				'Request' => $request,
-				'User'	  => $this->username,
-				'Token'   => $this->token,
-				'Version' => $this->version,
-			), $params
-		);
-		
-		// set curl options
-		curl_setopt_array( $ch, array(
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HEADER         => true,
-			CURLOPT_POST           => true,
-			CURLOPT_POSTFIELDS     => $params,
-			CURLOPT_CONNECTTIMEOUT => 0
-		));
-		
-		// make the request
-		$result = curl_exec( $ch );
-
-		// handle the result
-		if ( false !== $result ) {
-			// request was successful, parse the result
-			$result = $this->parseResponse( $ch, $result, $request );
-			if ( isset( $result[ 'response' ]->Meta->Status ) ) {
-				if ( 'Success' == $result[ 'response' ]->Meta->Status ) {
-					return $result[ 'response' ]->Result;
-				} else {
-					// Qualtrics returned an error
-					throw new Exceptions\QualtricsException( 'Qualtrics error: ' . $result[ 'response' ]->Meta->ErrorMessage, $result[ 'response' ]->Meta->ErrorCode );
-				}
-			} elseif ( '200' == $result[ 'headers' ][ 'http_code' ] ) {
-				// some responses, e.g. getLegacyResponseData do NOT have a Meta section
-				return $result[ 'response' ];
-			} else {
-				// some other error
-				// TODO
-			}
+		// set up the get request
+		$response = $this->client->get( '', [ 'query' => array_merge( [ 'Request' => $request ], $params ) ] );
+				
+		// handle the response
+		if ( '200' == $response->getStatusCode() ) {
+			$data = $response->json();
+			if ( "Success" == $data[ 'Meta' ][ 'Status' ] ) return json_decode( json_encode( $data[ 'Result' ] ) );
 		} else {
-			// there was an error with the curl request
-			throw new Exceptions\CurlException( 'Curl error: ' . curl_error( $ch ), curl_errno( $ch ) );
+			// unsuccessful response
+			switch( $response->getStatusCode() ) {
+				case '400':
+				case '401':
+				case '403':
+				case '404':
+					$data = $response->json();
+					throw new QualtricsException( $data[ 'Meta' ][ 'ErrorMessage' ], $response->getStatusCode() );
+					break;
+				case '500':
+			}
 		}
-		curl_close( $ch );
 	}
 	
+	/**
+	 * Gets information about a user
+	 *
+	 * @return object Information about the user in question
+	 */
+	function getUserInfo() {
+		// try to fetch  and return the results
+		return $this->request( 'getUserInfo' );
+	}
+
 	/**
 	 * Gets the total number of responses for a survey in a given date range
 	 *
@@ -318,27 +216,6 @@ class Qualtrics {
 	
 		// try to fetch and return the result
 		return $this->request( 'getResponseCountsBySurvey', $params );
-	}
-
-	/**
-	 * Gets information about a user
-	 *
-	 * ```
-	 * $params = array(
-	 *		'Format' => 'JSON', // Must be XML or JSON, defaults to JSON
-	 * );
-	 * ```
-	 *
-	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
-	 * @throws Exceptions\MissingParameterException Thrown when one of the required parameters does not exist in the $params array
-	 * @return object Information about the user in question
-	 */
-	function getUserInfo( $params = array() ) {
-		// set the parameters for this request
-		$params = array_merge( array( 'Format' => 'JSON' ), $params );
-	
-		// try to fetch  and return the results
-		return $this->request( 'getUserInfo', $params );
 	}
 
 	/**
@@ -448,7 +325,7 @@ class Qualtrics {
 	/**
 	 * Gets all the panel members for the given panel
 	 * 
-	 * @param string Format Must be XML, CSV, or HTML, defaults to CSV
+	 * @param string Format Must be XML, CSV, or HTML, defaults to JSON
 	 * @param string LibraryID The library ID of the panel
 	 * @param string PanelID The panel ID you want to export
 	 * @param string EmbeddedData A comma-separated list of the embedded data keys you want to export. Only required for CSV export. XML includes all embedded data.
@@ -459,7 +336,7 @@ class Qualtrics {
 	function getPanel( $params = array() ) {
 		// set the parameters for this request
 		$params = array_merge( array(
-			'Format'    => 'CSV',
+			'Format'    => 'JSON',
 			'LibraryID' => $this->library,
 			'PanelID'   => null,
 			), $params
@@ -475,7 +352,7 @@ class Qualtrics {
 	/**
 	 * Deletes a panel
 	 * 
-	 * @param string Format Must be XML, CSV, or HTML, defaults to CSV
+	 * @param string Format Must be XML, CSV, or HTML, defaults to JSON
 	 * @param string LibraryID The library ID of the panel
 	 * @param string PanelID The panel ID you want to export
 	 * @param string[] $params An array of named parameters needed to complete the request (see code above)
@@ -809,9 +686,8 @@ class Qualtrics {
 		if ( ! $params[ 'RecipientID' ] ) throw new Exceptions\MissingParameterExtension( 'Missing Parameter: The required RecipientID parameter was not specified' );
 		if ( ! $params[ 'RecipientID' ] ) throw new Exceptions\MissingParameterException( 'Missing Parameter: The required RecipientID parameter was not specified' );
 	
-		// fetch the response
-		$response = $this->request( 'updateRecipient', $params );
-		return ( ! is_wp_error( $response ) ) ? true : $response;
+		// return the response
+		return $this->request( 'updateRecipient', $params );
 	}
 
 	/**
@@ -850,37 +726,8 @@ class Qualtrics {
 		// check for missing values
 		if ( ! $params[ 'SurveyID' ] ) throw new Exceptions\MissingParameterExtension( 'Missing Parameter: The required SurveyID parameter was not specified' );
 	
-		// fetch the response
-		$response = $this->request( 'getLegacyResponseData', $params );
-		// standardize the response format to an array of objects with the same properties
-		switch ( $params[ 'Format' ] ) {
-			case 'XML': $response = $response->Response; break;
-			case 'JSON':
-				$responses = array();
-				foreach ( $response as $rid => $r ) {
-					$r->ResponseID = $rid;
-					$responses[] = $r;
-				} 
-				$response = $responses;
-				break;
-			case 'CSV':
-				$keys = $values = array();
-				foreach ( $response as $i => $r ) {
-					foreach ( $r as $j => $v ) {
-						if ( $i != 0 ) {
-							if ( $i == 1 ) {
-								$keys[ $j ] = preg_match( '/Q\d+/i', $response[ 0 ][ $j ] ) ? $response[ 0 ][ $j ] : $v;
-							} else {
-								if ( ! isset( $values[ $i ] ) ) $values[ $i ] = new \stdClass;
-								if ( '' != $keys[ $j ] ) $values[ $i ]->{$keys[ $j ]} = $v;
-							}
-						}
-					}
-				}
-				$response = array_values( $values );
-				break;
-		}
-		return $response;
+		// return the response
+		return $this->request( 'getLegacyResponseData', $params );
 	}
 
 	/**
@@ -923,8 +770,7 @@ class Qualtrics {
 		);
 	
 		// fetch and return the response
-		$response = $this->request( 'getSurveys', $params );
-		return 'XML' === $params[ 'Format' ] ? $response->Surveys->element : $response->Surveys;
+		return $this->request( 'getSurveys', $params );
 	}
 
 }

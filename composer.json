@@ -11,7 +11,8 @@
     "require": {
         "php": ">=5.4.0",
 		"ext-curl": "*",
-        "illuminate/support": "4.2.*@dev"
+        "illuminate/support": "4.2.*@dev",
+		"guzzlehttp/guzzle": "~4.0"
     },
 	"require-dev": {
 		"orchestra/testbench": "2.2.*@dev",

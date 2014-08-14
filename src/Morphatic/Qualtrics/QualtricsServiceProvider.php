@@ -39,8 +39,14 @@ class QualtricsServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		// bind the Qualtrics class for use with a facade
-		$this->app->bind( 'qualtrics', function() { return new Qualtrics; } );
+		// register our class
+		$this->app[ 'qualtrics' ] = $this->app->share( function( $app ) { return new Qualtrics; } );
+		
+		// create an alias so users don't have to add this entry to their app.config file
+		$this->app->booting( function() {
+			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
+			$loader->alias( 'Qualtrics', 'Morphatic\Qualtrics\Qualtrics' );
+		});
 		
 		// register exception handlers
 		$this->app->error( function( Exceptions\QualtricsException $e ) {
@@ -48,15 +54,6 @@ class QualtricsServiceProvider extends ServiceProvider {
 		});
 		$this->app->error( function( Exceptions\QualtricsXMLException $e ) {
 			return $e->getCode() . ': ' . $e->getMessage();
-		});
-		$this->app->error( function( Exceptions\CurlException $e ) {
-			return $e->getCode() . ': ' . $e->getMessage();
-		});
-		$this->app->error( function( Exceptions\CurlNotInstalledException $e ) {
-			return $e->getMessage();
-		});
-		$this->app->error( function( Exceptions\UnknownFormatException $e ) {
-			return $e->getMessage();
 		});
 		$this->app->error( function( Exceptions\MissingParameterException $e ) {
 			return $e->getCode() . ': ' . $e->getMessage();
@@ -70,7 +67,7 @@ class QualtricsServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array( 'qualtrics' );
 	}
 
 }
