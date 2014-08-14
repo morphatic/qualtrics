@@ -52,9 +52,6 @@ class QualtricsServiceProvider extends ServiceProvider {
 		$this->app->error( function( Exceptions\QualtricsException $e ) {
 			return $e->getCode() . ': ' . $e->getMessage();
 		});
-		$this->app->error( function( Exceptions\QualtricsXMLException $e ) {
-			return $e->getCode() . ': ' . $e->getMessage();
-		});
 		$this->app->error( function( Exceptions\MissingParameterException $e ) {
 			return $e->getCode() . ': ' . $e->getMessage();
 		});
