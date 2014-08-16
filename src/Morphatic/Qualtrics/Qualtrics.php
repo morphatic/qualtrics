@@ -178,10 +178,11 @@ class Qualtrics {
 				if ( "Success" == $data->Meta->Status ) return $data->Result;
 
 				// otherwise throw an exception
-				throw new Exceptions\QualtricsException( $data->Meta->ErrorMessage, $response->getStatusCode() );
-
+				throw new Exceptions\QualtricsException( $data->Meta->ErrorMessage, $data->Meta->ErrorCode );
+				
 			} else {
 				// unknown return type (CSV or HTML?)
+				throw new Exceptions\UnhandledTypeException( "Sorry. Morphatic/Qualtrics doesn't handle responses of this type." );
 			}
 			
 		} else {

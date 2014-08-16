@@ -141,6 +141,22 @@ class QualtricsTest extends TestCase {
 		$data = $this->qtrx->getUserInfo( [] );
 	}
 	
+	/**
+	 * @expectedException	\Morphatic\Qualtrics\Exceptions\QualtricsException
+	 */
+	public function testQualtricsException200() {
+		$this->mock->addResponse(  __DIR__ . "/HttpRequests/getQualtricsError.json" );
+		$data = $this->qtrx->getUserInfo( [] );
+	}
+	
+	/**
+	 * @expectedException	\Morphatic\Qualtrics\Exceptions\UnhandledTypeException
+	 */
+	public function testUnhandledTypeException() {
+		$this->mock->addResponse(  __DIR__ . "/HttpRequests/htmlResponse.html" );
+		$data = $this->qtrx->getUserInfo( [] );
+	}
+	
 	public function testMissingParameterExceptionReturnsMessageAndCode() {
 		try {
 			$qtrx = new Qualtrics();
