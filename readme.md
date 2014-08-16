@@ -17,7 +17,7 @@ This Qualtrics API wrapper for Laravel 4 provides access to the API via a PHP wr
 To install the Qualtrics API wrapper for Laravel 4, add the following to the `"require"` element of your `composer.json` file:
 
 ```
-    "morphatic/qualtrics": "1.0.*@dev"
+    "morphatic/qualtrics": "1.1.*@dev"
 ```
 
 Then run `composer update` from the command line.
@@ -26,12 +26,6 @@ In `config.app` under `providers` add:
 
 ```
     'Morphatic\Qualtrics\QualtricsServiceProvider',
-```
-
-And under `aliases` add:
-
-```
-   'Qualtrics' => 'Morphatic\Qualtrics\Facades\Qualtrics',
 ```
 
 Finally, from the command line run:
@@ -44,7 +38,29 @@ And in the `app/config/packages/morphatic/qualtrics/config.php` file update your
 
 ### Basic usage
 
+You can create a basic instance of the class with just a username and API token. Here's an example:
 
+```php
+// Qualtrics login email 
+$user  = 'someuser@test.com';                        
+
+// Qualtrics API Token
+$token = 'RmvGK6vjF3Izx8Ea2pCisDDSpqE4dELw9AzheBDc'; 
+
+// create the instance
+$qtrx  = new Qualtrics( $user, $token );             
+
+// get the user info (no additional parameters necessary)
+$info  = $qtrx->getUserInfo();                       
+
+// accessible libraries
+$libraries = $info->Libraries;
+
+// get a particular survey (requires ID of desired survey)
+$mysurvey = $qtrx->getSurvey( [ 'SurveyID' => 'SV_9EQYOts8KmOle04' ] );                       
+```
+
+Any additional parameters required by the call ([see the official API documentation](https://survey.qualtrics.com/WRAPI/ControlPanel/docs.php)) should be passed as an associative array of key/value pairs.  The keys are case sensitive and follow the naming convention of the official docs.
 
 ### Disclaimer
 
