@@ -42,16 +42,16 @@ You can create a basic instance of the class with just a username and API token.
 
 ```php
 // Qualtrics login email 
-$user  = 'someuser@test.com';                        
+$user  = 'someuser@test.com';
 
 // Qualtrics API Token
-$token = 'RmvGK6vjF3Izx8Ea2pCisDDSpqE4dELw9AzheBDc'; 
+$token = 'RmvGK6vjF3Izx8Ea2pCisDDSpqE4dELw9AzheBDc';
 
 // create the instance
-$qtrx  = new Qualtrics( $user, $token );             
+$qtrx  = new Qualtrics( $user, $token );
 
 // get the user info (no additional parameters necessary)
-$info  = $qtrx->getUserInfo();                       
+$info  = $qtrx->getUserInfo();
 
 // accessible libraries
 $libraries = $info->Libraries;

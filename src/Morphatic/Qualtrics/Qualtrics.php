@@ -166,7 +166,7 @@ class Qualtrics {
 			if ( false !== stripos( $type, 'xml' ) ) {
 
 				// get XML response
-				$data = $response->xml();
+				$data = $response->xml( [ 'libxml_options' => LIBXML_NONET|LIBXML_NOCDATA ] );
 				return $data;
 
 			} elseif ( false !== stripos( $type, 'json' ) ) {
@@ -776,8 +776,12 @@ class Qualtrics {
 		if ( ! $params[ 'SurveyID' ] ) throw new Exceptions\MissingParameterExtension( 'Missing Parameter: The required SurveyID parameter was not specified' );
 	
 		// fetch the response
-		// TODO: This function returns data in a non-standard format.  Needs to be handled specially.
-		return $this->request( 'getSurvey', $params );
+		$xml = $this->request( 'getSurvey', $params );
+
+		// now convert to JSON
+		$json = json_encode( $xml );
+		
+		return $json;
 	}
 
 	/**

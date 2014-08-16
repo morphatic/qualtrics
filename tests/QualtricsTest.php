@@ -273,10 +273,14 @@ class QualtricsTest extends TestCase {
 	}
 	
 	public function testGetSurvey() {
+
 		$params = [ 'SurveyID' => 'ssss' ];
 		$this->mock->addResponse(  __DIR__ . "/HttpRequests/getSurvey.xml" );
-		$data = new SimpleXMLElement( file( __DIR__ . "/HttpRequests/getSurvey.xml" )[ 4 ] );
-		$this->assertEquals( $data, $this->qtrx->getSurvey( $params ) );
+
+		$xml = simplexml_load_string( file_get_contents( __DIR__ . "/HttpRequests/getSurveyXML.xml" ), "SimpleXMLElement", LIBXML_NONET|LIBXML_NOCDATA );
+		$json = json_encode( $xml );
+		
+		$this->assertEquals( $json, $this->qtrx->getSurvey( $params ) );
 	}
 	
 	public function testGetSurveys() {
