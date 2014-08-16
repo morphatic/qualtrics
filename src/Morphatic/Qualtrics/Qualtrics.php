@@ -157,8 +157,27 @@ class Qualtrics {
 				
 		// handle the response
 		if ( '200' == $response->getStatusCode() ) {
-			$data = $response->json();
-			if ( "Success" == $data[ 'Meta' ][ 'Status' ] ) return json_decode( json_encode( $data[ 'Result' ] ) );
+			
+			// get the content type
+			$type = $response->getHeader( 'Content-Type' );
+			
+			// get the response given the response type
+			if ( false !== stripos( $type, 'xml' ) ) {
+				// get XML response
+				$data = $response->xml();
+			} elseif ( false !== stripos( $type, 'json' ) ) {
+				// get JSON response
+				$data = json_decode( json_encode( $response->json() ) );
+			} else {
+				// unknown return type (CSV or HTML?)
+			}
+			
+			// if it was successful return the result
+			if ( "Success" == $data->Meta->Status ) return $data->Result;
+			
+			// otherwise throw an exception
+			throw new QualtricsException( $data->Meta->ErrorMessage, $response->getStatusCode() );
+			
 		} else {
 			// unsuccessful response
 			switch( $response->getStatusCode() ) {
