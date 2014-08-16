@@ -1,0 +1,4 @@
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/json
+
+{"Meta":{"Status":"Error","RequestType":"getPanel","ErrorCode":500,"QualtricsErrorCode":"ESEC62","ErrorMessage":"You do not have permission to download survey data.","Debug":""},"Result":null}

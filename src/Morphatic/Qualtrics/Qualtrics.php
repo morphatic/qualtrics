@@ -109,7 +109,8 @@ class Qualtrics {
 				'connect_timeout' => 0,
 			],
 			'defaults'        => [
-				'query' => [
+				'exceptions' => false,
+				'query'      => [
 					'User'	  => $this->username,
 					'Token'   => $this->token,
 					'Version' => $this->version,
@@ -163,20 +164,25 @@ class Qualtrics {
 			
 			// get the response given the response type
 			if ( false !== stripos( $type, 'xml' ) ) {
+
 				// get XML response
 				$data = $response->xml();
+				return $data;
+
 			} elseif ( false !== stripos( $type, 'json' ) ) {
+
 				// get JSON response
 				$data = json_decode( json_encode( $response->json() ) );
+
+				// if it was successful return the result
+				if ( "Success" == $data->Meta->Status ) return $data->Result;
+
+				// otherwise throw an exception
+				throw new Exceptions\QualtricsException( $data->Meta->ErrorMessage, $response->getStatusCode() );
+
 			} else {
 				// unknown return type (CSV or HTML?)
 			}
-			
-			// if it was successful return the result
-			if ( "Success" == $data->Meta->Status ) return $data->Result;
-			
-			// otherwise throw an exception
-			throw new QualtricsException( $data->Meta->ErrorMessage, $response->getStatusCode() );
 			
 		} else {
 			// unsuccessful response
@@ -185,10 +191,10 @@ class Qualtrics {
 				case '401':
 				case '403':
 				case '404':
-					$data = $response->json();
-					throw new QualtricsException( $data[ 'Meta' ][ 'ErrorMessage' ], $response->getStatusCode() );
-					break;
 				case '500':
+					$data = $response->json();
+					throw new Exceptions\QualtricsException( $data[ 'Meta' ][ 'ErrorMessage' ], $response->getStatusCode() );
+					break;
 			}
 		}
 	}

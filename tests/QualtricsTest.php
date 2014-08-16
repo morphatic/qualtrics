@@ -120,6 +120,12 @@ class QualtricsTest extends TestCase {
 		$this->assertInstanceOf( 'Qualtrics', $this->qtrx );
 	}
 
+	// Utility functions
+	public function testHasLibrary() {
+		$this->assertTrue( $this->qtrx->hasLibrary() );
+	}
+	
+	// test exceptions
 	/**
 	 * @expectedException	\Morphatic\Qualtrics\Exceptions\MissingParameterException
 	 */
@@ -127,6 +133,69 @@ class QualtricsTest extends TestCase {
 		$qtrx = new Qualtrics();
 	}
 	
+	/**
+	 * @expectedException	\Morphatic\Qualtrics\Exceptions\QualtricsException
+	 */
+	public function testQualtricsException() {
+		$this->mock->addResponse(  __DIR__ . "/HttpRequests/500.json" );
+		$data = $this->qtrx->getUserInfo( [] );
+	}
+	
+	public function testMissingParameterExceptionReturnsMessageAndCode() {
+		try {
+			$qtrx = new Qualtrics();
+		} catch ( \Morphatic\Qualtrics\Exceptions\MissingParameterException $e) {
+			$this->assertEquals( $e->getMessage(), "The Qualtrics username and/or API token was unspecified. These parameters must be passed to the constructor or stored in the cofig file." );
+			$this->assertEquals( $e->getCode(), 0 );
+		}
+	}
+	
+	public function test400() {
+		try {
+			$this->mock->addResponse(  __DIR__ . "/HttpRequests/400.json" );
+		} catch ( \Morphatic\Qualtrics\Exceptions\QualtricsException $e) {
+			$this->assertEquals( $e->getMessage(), "Invalid request. Missing or invalid parameter LibraryID." );
+			$this->assertEquals( $e->getCode(), 400 );
+		}
+	}
+
+	public function test401() {
+		try {
+			$this->mock->addResponse(  __DIR__ . "/HttpRequests/400.json" );
+		} catch ( \Morphatic\Qualtrics\Exceptions\QualtricsException $e) {
+			$this->assertEquals( $e->getMessage(), "Invalid request. Missing or invalid parameter LibraryID." );
+			$this->assertEquals( $e->getCode(), 401 );
+		}
+	}
+	
+	public function test403() {
+		try {
+			$this->mock->addResponse(  __DIR__ . "/HttpRequests/400.json" );
+		} catch ( \Morphatic\Qualtrics\Exceptions\QualtricsException $e) {
+			$this->assertEquals( $e->getMessage(), "Invalid request. Missing or invalid parameter LibraryID." );
+			$this->assertEquals( $e->getCode(), 403 );
+		}
+	}
+
+	public function test404() {
+		try {
+			$this->mock->addResponse(  __DIR__ . "/HttpRequests/400.json" );
+		} catch ( \Morphatic\Qualtrics\Exceptions\QualtricsException $e) {
+			$this->assertEquals( $e->getMessage(), "Invalid request. Missing or invalid parameter LibraryID." );
+			$this->assertEquals( $e->getCode(), 404 );
+		}
+	}
+
+	public function test500() {
+		try {
+			$this->mock->addResponse(  __DIR__ . "/HttpRequests/400.json" );
+		} catch ( \Morphatic\Qualtrics\Exceptions\QualtricsException $e) {
+			$this->assertEquals( $e->getMessage(), "You do not have permission to download survey data." );
+			$this->assertEquals( $e->getCode(), 500 );
+		}
+	}
+
+	// test API functions
 	public function testAddRecipient() {
 		$params = [ 'PanelID' => 'pppp', 'FirstName' => 'Test', 'LastName' => 'User', 'Email' => 'test@user.com' ];
 		$values = $this->createMethodTest( 'addRecipient', $params );
@@ -189,8 +258,9 @@ class QualtricsTest extends TestCase {
 	
 	public function testGetSurvey() {
 		$params = [ 'SurveyID' => 'ssss' ];
-		$values = $this->createMethodTest( 'getSurvey', $params );
-		$this->assertEquals( $values[ 0 ], $values[ 1 ] );
+		$this->mock->addResponse(  __DIR__ . "/HttpRequests/getSurvey.xml" );
+		$data = new SimpleXMLElement( file( __DIR__ . "/HttpRequests/getSurvey.xml" )[ 4 ] );
+		$this->assertEquals( $data, $this->qtrx->getSurvey( $params ) );
 	}
 	
 	public function testGetSurveys() {
