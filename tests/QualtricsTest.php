@@ -278,7 +278,7 @@ class QualtricsTest extends TestCase {
 		$this->mock->addResponse(  __DIR__ . "/HttpRequests/getSurvey.xml" );
 
 		$xml = simplexml_load_string( file_get_contents( __DIR__ . "/HttpRequests/getSurveyXML.xml" ), "SimpleXMLElement", LIBXML_NONET|LIBXML_NOCDATA );
-		$json = json_encode( $xml );
+		$json = json_decode( json_encode( $xml ) );
 		
 		$this->assertEquals( $json, $this->qtrx->getSurvey( $params ) );
 	}

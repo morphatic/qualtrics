@@ -778,10 +778,7 @@ class Qualtrics {
 		// fetch the response
 		$xml = $this->request( 'getSurvey', $params );
 
-		// now convert to JSON
-		$json = json_encode( $xml );
-		
-		return $json;
+		return json_decode( json_encode( $xml ) );
 	}
 
 	/**
